@@ -65,34 +65,51 @@ class LRUCacheItem {
 // TODO: Implement the LRUCacheItem class here
 class LRUCache {
   constructor(limit) {
-
+    this.limit = limit;
+    this.count = 0;
+    this.map = {};
+    this.cache = new List;
   }
 
   // TODO: Implement the size method here
   size() {
-
+    return this.count;
   }
 
   // TODO: Implement the get method here
   get(key) {
-
+    debugger
+    if (this.map[key]) {
+      const node = this.map[key]
+      this.promote(node);
+      return node.val  
+    } else {
+      return null;
+    }
   }
 
   // TODO: Implement the set method here
   set(key, val) {
-
+    if (this.isFull()) {
+      this.prune();
+    }
+    this.count += 1;
+    const newNode = this.cache.unshift(key, val);
+    this.map[key] = newNode;
   }
 
   isFull() {
-    
+    return this.count >= this.limit;
   }
 
   prune() {
-
+    this.count -= 1;
+    const tail = this.cache.pop()
+    delete this.map[tail.key];
   }
 
   promote(item) {
-
+    this.cache.moveToFront(item);
   }
 }
 
@@ -101,9 +118,10 @@ class LRUCache {
 // Given: Doubly Linked List - Do Not Edit!
 // ----------------------------------------
 class ListNode {
-  constructor(val, prev = null, next = null) {
+  constructor(key, val, prev = null, next = null) {
     this.prev = prev;
     this.val = val;
+    this.key = key;
     this.next = next;
   }
 
@@ -121,12 +139,12 @@ class List {
   }
 
   // Insert at the head of the list.
-  unshift(val) {
+  unshift(key, val) {
     if (this.head === null && this.tail === null) {
-      this.head = new ListNode(val);
+      this.head = new ListNode(key, val);
       this.tail = this.head;
     } else {
-      this.head = new ListNode(val, null, this.head);
+      this.head = new ListNode(key, val, null, this.head);
       this.head.next.prev = this.head;
     }
 
@@ -146,11 +164,11 @@ class List {
   }
 
   // Insert at the end of the list.
-  push(val) {
+  push(key, val) {
     if (this.head === null && this.tail === null) {
-      this.head = this.tail = new ListNode(val);
+      this.head = this.tail = new ListNode(key, val);
     } else {
-      this.tail = new ListNode(val, this.tail, null);
+      this.tail = new ListNode(key, val, this.tail, null);
       this.tail.prev.next = this.tail;
     }
 
@@ -165,7 +183,7 @@ class List {
       let tail = this.tail;
       this.tail = this.tail.prev;
       tail.delete();
-      return tail.val;
+      return tail;
     }
   }
 
@@ -225,3 +243,9 @@ exports.List = List;
 exports.ListNode = ListNode;
 exports.LRUCache = LRUCache;
 exports.LRUCacheItem = LRUCacheItem;
+
+
+const lruCache = new LRUCache(10);
+for (let i = 0; i < 15; i++) lruCache.set(i, i);
+lruCache.get(1)
+

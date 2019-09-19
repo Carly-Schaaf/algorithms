@@ -60,7 +60,14 @@
 // Let's code!
 // -----------
 function hasCycle(linkedList) {
-  // TODO: Implement the hasCycle function!
+  let currentNode = linkedList.head;
+  for (let index = 1; index <= linkedList.length; index++) {
+    if (index === linkedList.length) {
+        if (currentNode.next === null) return false;
+        return true;
+      }
+    currentNode = currentNode.next;
+  }
 
 }
 

@@ -40,8 +40,22 @@
 // Let's code!
 // -----------
 function linkedListIntersection(list1, list2) {
-  // TODO: Implement the hasCycle function!
-
+  const map = {};
+  let currentNode = list1.head;
+  while (currentNode.next !== null) {
+    const nextNode = currentNode.next;
+    map[nextNode.value] = true;
+    currentNode = nextNode;
+  }
+  currentNode = list2.head;
+  while (currentNode.next !== null) {
+    const nextNode = currentNode.next;
+    if (map[nextNode.value]) {
+      return nextNode
+    }
+    currentNode = nextNode;
+  }
+  return null;
 }
 
 // ----------------------------------------
