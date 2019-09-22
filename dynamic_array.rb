@@ -1,5 +1,6 @@
 require 'byebug'
 class DArray
+
     def initialize
         @static = Array.new(5)
         @count = 0
@@ -7,76 +8,92 @@ class DArray
         @start_idx = 0
     end
 
-    def openings 
-        @static.length - @count
-    end
-
     def push(el)
-        back_resize! if full?
-        @static[@end_idx] = el 
-        @end_idx += 1
-        @count += 1
-        return true
+        resize! if full?
+        unless full?
+            @end_idx += 1
+            @static[@end_idx] = el 
+            @count += 1
+            return self.inspect
+        end 
+        return false
     end
 
     def pop
         unless empty?
-            @end_idx -= 1
             el = @static[@end_idx]
             @static[@end_idx] = nil
+            @end_idx -= 1
             @count -= 1
-            return el
+            return self.inspect
         end
         false
     end
 
-    def back_resize!
-        @static += Array.new(@static.length)
-    end
-
-    def front_resize!
-        @start_idx += @static.length
-        @end_idx += @static.length
-        @static = Array.new(@static.length) + @static
-    end
-
-    def full?
-        self.openings == 0
-    end
-
-    def empty?
-        @openings == @static.length
-    end
-
-    def front 
-        return "empty" if empty?
-        @static[@start_idx]
-    end
-
-    def rear 
-        return "empty" if empty?
-        @static[@end_idx - 1]
-    end
-
     def unshift(el)
-        debugger
-        front_resize! if full?  
-        @static[@start_idx] = el
-        @end_idx += 1
-        @count += 1
-        return true
+        resize! if full?
+        unless full?
+            @static[@start_idx] = el
+            @start_idx -= 1
+            @count += 1
+            return self.inspect
+        end
+        return false
     end
 
     def shift
         unless empty?
             @start_idx += 1
-            @end_idx -= 1
             el = @static[@start_idx]
             @static[@start_idx] = nil
             @count -= 1
-            return el
+            return self.inspect
         end
         false
+    end
+
+     def front 
+        return nil if empty?
+        @static[@start_idx + 1]
+    end
+
+    def rear 
+        return nil if empty?
+        @static[@end_idx]
+    end
+
+    def inspect
+        result = []
+        i = @start_idx + 1
+        until i == @end_idx + 1
+            result << @static[i]
+            i += 1
+        end
+        result
+    end
+
+    protected 
+
+    def resize!
+        new_array = Array.new(@static.length * 2)
+        old_start = @start_idx
+        new_start = 0
+        until old_start == @end_idx + 1
+            new_array[new_start] = @static[old_start]
+            new_start += 1
+            old_start += 1
+        end
+        @static = new_array
+        @end_idx = @end_idx + (@start_idx).abs
+        @start_idx = 0
+    end
+
+    def full?
+        @count == @static.length
+    end
+
+    def empty?
+        @count == 0
     end
 
 end
@@ -88,8 +105,4 @@ p d.unshift(3) # true
 p d.unshift(4) # true
 p d.unshift(5) # true
 p d.unshift(6) # true
-p d.rear # 1
-p d.front # 6
-p d.unshift(0) # true
-p d.front # 0
-p d.rear # 6
+p d # [6,5,4,3,2,1]
