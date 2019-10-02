@@ -15,7 +15,7 @@
 
 
         .child {
-            width: 10%;
+            width: .13%;
             background-color: red;
         }
     </style>
@@ -45,14 +45,15 @@
         }
         
         renderBar() {
-          const threshold = Math.floor(2000 / 10);
+          // every 10 statuses, we want to add another div, giving us 100 total divs
+          const threshold = 2000 / 800;
           const numDivs = Math.floor(this.state.status / threshold);
-          console.log("numdivs" + numDivs);
-          console.log("status" + this.state.status);
+          
           const divs = [];
           for (let i = 0; i < numDivs; i++) {
             divs.push(<div className="child"></div>)
           }
+          this.divs = divs.length;
           return divs;
         }
         
@@ -64,6 +65,9 @@
             <div className="container">
               {this.renderBar()}
             </div>
+            {this.state.status}
+            <br/>
+            {this.divs}
           </div>
         }
       }
