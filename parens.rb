@@ -1,3 +1,4 @@
+# https://leetcode.com/problems/generate-parentheses/
 # @param {Integer} n
 # @return {String[]}
 def generate_parenthesis(n)
@@ -5,8 +6,7 @@ def generate_parenthesis(n)
     if n == 1
         return ["()"]
     end
-    
-    sub_result = []   
+    result = []   
     permutations = generate_parenthesis(n - 1)
     permutations.each do |perm|
         (0..perm.length).each do |i|
@@ -16,12 +16,14 @@ def generate_parenthesis(n)
     final_result = []
     result.each_with_index do |perm, i|
         (0..perm.length).each do |i|
-            final_result << perm[0...i] + ")" + perm[i..-1]
+            next_perm = perm[0...i] + ")" + perm[i..-1]
+            final_result << next_perm if is_valid?(next_perm)
         end
     end
-    final_result.select do |paren|
-        is_valid?(paren)
-    end.uniq
+    final_result.uniq
+    # final_result.select do |paren|
+    #     is_valid?(paren)
+    # end.uniq
 end
 
 def is_valid?(paren)
