@@ -10,12 +10,12 @@
             justify-content: start;
             height: 50px;
             width: 100%;
-            background-color: blue;
+            background-color: black;
         }
 
 
         .child {
-            width: .13%;
+            width: .1%;
             background-color: red;
         }
     </style>
@@ -45,12 +45,9 @@
         }
         
         renderBar() {
-          // every 10 statuses, we want to add another div, giving us 100 total divs
-          const threshold = 2000 / 800;
-          const numDivs = Math.floor(this.state.status / threshold);
           
           const divs = [];
-          for (let i = 0; i < numDivs; i++) {
+          for (let i = 0; i < Math.floor(this.state.status/2); i++) {
             divs.push(<div className="child"></div>)
           }
           this.divs = divs.length;
