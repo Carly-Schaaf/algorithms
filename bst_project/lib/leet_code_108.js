@@ -7,7 +7,27 @@ function TreeNode(val) {
 }
 
 TreeNode.prototype.rebalance = function() {
-    
+    if (this.balanceFactor < 0) {
+        const shouldRotateTwice = this.left.right;
+        this.rotateRight(shouldRotateTwice);
+    } else {
+        
+    }
+}
+
+TreeNode.prototype.rotateRight = function (shouldRotateTwice) {
+    if (shouldRotateTwice) {
+        const newLeft = this.left.right;
+        const oldLeft = this.left;
+        this.left = newLeft;
+        newLeft.left = oldLeft;
+        oldLeft.right = null;
+    }
+
+    const newRoot = this.left;
+    newRoot.right = this;
+    this.left = null;
+    this.right = null;  
 }
 
 function sortedArrayToBST(nums) {
