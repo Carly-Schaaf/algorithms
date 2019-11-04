@@ -11,11 +11,28 @@ TreeNode.prototype.rebalance = function() {
         const shouldRotateTwice = this.left.right;
         this.rotateRight(shouldRotateTwice);
     } else {
-        
+        // does my right child have a left child?
+        const shouldRotateTwice = this.right.left;
+        this.rotateLeft(shouldRotateTwice);
     }
 }
 
-TreeNode.prototype.rotateRight = function (shouldRotateTwice) {
+TreeNode.prototype.rotateLeft = function(shouldRotateTwice) {
+    if (shouldRotateTwice) {
+        const newLeft = this.right.left;
+        newLeft.left = this.right;
+        this.right.left = null;
+        this.right = newLeft;
+        // what if right child has 2 children? --> level wouldn't exist b/c balance
+    }
+
+    this.left = new TreeNode(this.val);
+    this.val = this.right.val;
+    const newRight = this.right.left || this.right.right;
+    this.right = newRight;
+}
+
+TreeNode.prototype.rotateRight = function(shouldRotateTwice) {
     if (shouldRotateTwice) {
         const newLeft = this.left.right;
         const oldLeft = this.left;
@@ -24,10 +41,9 @@ TreeNode.prototype.rotateRight = function (shouldRotateTwice) {
         oldLeft.right = null;
     }
 
-    const newRoot = this.left;
-    newRoot.right = this;
-    this.left = null;
-    this.right = null;  
+    this.right = new TreeNode(this.val);
+    this.val = this.left.val;
+    this.left.val = this.left.left; 
 }
 
 function sortedArrayToBST(nums) {
@@ -49,18 +65,37 @@ function insert(val, root) {
             insert(val, root.left);
         } else {
             root.left = new TreeNode(val);
-            root.balanceFactor += -1;
+            // root.balanceFactor += -1;
         }
     } else {
         if (root.right) {
             insert(val, root.right);
         } else {
             root.right = new TreeNode(val);
-            root.balanceFactor += 1;
+            // root.balanceFactor += 1;
         }
     }
     if (!-2 < root.balanceFactor < 2) {
-        root.rebalance();
+        // root.rebalance();
     }
 }
 
+function printBfs(root) {
+    const q = [root];
+    let counter = 0;
+    let currentNode;
+    while (counter < q.length) {
+        currentNode = q[counter];
+        if (currentNode.left) q.push(currentNode.left);
+        if (currentNode.right) q.push(currentNode.right);
+        counter ++;
+    }
+    const result = q.map(node => node.val);
+    console.log(result);
+}
+
+const root = new TreeNode(3);
+insert(1, root);
+insert(4, root);
+// console.log(root);
+printBfs(root);
