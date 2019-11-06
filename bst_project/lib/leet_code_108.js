@@ -15,15 +15,18 @@ TreeNode.prototype.rebalance = function() {
         const shouldRotateTwice = this.right.left;
         this.rotateLeft(shouldRotateTwice);
     }
+
+    this.balanceFactor = 0;
+    this.left.balanceFactor = 0;
+    this.right.balanceFactor = 0;
 }
 
 TreeNode.prototype.rotateLeft = function(shouldRotateTwice) {
     if (shouldRotateTwice) {
-        const newLeft = this.right.left;
-        newLeft.left = this.right;
+        const newRight = this.right.left;
+        newRight.right = this.right;
         this.right.left = null;
-        this.right = newLeft;
-        // what if right child has 2 children? --> level wouldn't exist b/c balance
+        this.right = newRight;
     }
 
     this.left = new TreeNode(this.val);
@@ -63,20 +66,22 @@ function insert(val, root) {
     if (val < root.val) {
         if (root.left) {
             insert(val, root.left);
+            root.balanceFactor += -1;
         } else {
             root.left = new TreeNode(val);
-            // root.balanceFactor += -1;
+            root.balanceFactor += -1;
         }
     } else {
         if (root.right) {
             insert(val, root.right);
+            root.balanceFactor += 1;
         } else {
             root.right = new TreeNode(val);
-            // root.balanceFactor += 1;
+            root.balanceFactor += 1;
         }
     }
-    if (!-2 < root.balanceFactor < 2) {
-        // root.rebalance();
+    if (root.balanceFactor > 1 || root.balanceFactor < -1) {
+        root.rebalance();
     }
 }
 
@@ -86,16 +91,33 @@ function printBfs(root) {
     let currentNode;
     while (counter < q.length) {
         currentNode = q[counter];
-        if (currentNode.left) q.push(currentNode.left);
-        if (currentNode.right) q.push(currentNode.right);
+        if (!currentNode) {counter++; continue;};
+        q.push(currentNode.left);
+        q.push(currentNode.right);
         counter ++;
     }
-    const result = q.map(node => node.val);
-    console.log(result);
+    const result = q.map(node => node ? node.val : null);
+    // console.log(result);
+    return result;
 }
 
 const root = new TreeNode(3);
 insert(1, root);
 insert(4, root);
-// console.log(root);
-printBfs(root);
+insert(0, root);
+insert(5, root);
+
+console.log(JSON.stringify(printBfs(root)) === JSON.stringify([3, 1, 4, 0, null, null, 5, null, null, null, null]));
+
+insert(2, root);
+console.log(JSON.stringify(printBfs(root)) === JSON.stringify([3, 1, 4, 0, 2, null, 5, null, null, null, null, null, null]));
+
+insert(6, root);
+console.log(JSON.stringify(printBfs(root)) === JSON.stringify([3, 1, 5, 0, 2, 4, 6, null, null, null, null, null, null, null, null]));
+
+insert(8, root);
+console.log(JSON.stringify(printBfs(root)) === JSON.stringify([3, 1, 5, 0, 2, 4, 6, null, null, null, null, null, null, null, 8, null, null]));
+
+debugger
+insert(7, root);
+console.log(JSON.stringify(printBfs(root)) === JSON.stringify([3, 1, 5, 0, 2, 4, 7, null, null, null, null, null, null, 6, 8, null, null, null, null]));
