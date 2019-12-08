@@ -51,3 +51,4 @@ puts longest_palindrome("aabaabc") == "aabaa"
 puts longest_palindrome("aaaaaa") == "aaaaaa"
 puts longest_palindrome("xx") == "xx"
 puts longest_palindrome("y") == "y"
+# check the spaces cuz otherwise you'll never catch even palidromes
