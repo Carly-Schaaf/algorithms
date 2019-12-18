@@ -70,61 +70,76 @@ const copied = {}
 var copyRandomList = function (head) {
     if (head === null) return head;
 
-    let next;
-    if (head.next && copied[head.next.id]) {
-        next = copied[head.next.id];
-    } else {
-        next = copyRandomList(head.next);
-    }
+    let headCopy = copied[head];
+    if (!headCopy) {
+        let next;
+        let random;
 
-    let random;
-    let newHead;
+        if (head.next && copied[head.next]) {
+            next = copied[head.next];
+        } else if (head.next === head) {
+            headCopy = new Node(head.val, null, null);
+            headCopy.next = headCopy;
+        } else {
+            next = copyRandomList(head.next);
+            if (next) copied[next] = next;
+        }
 
-    if (head.random === head.next) {
-        random = next;
-    } else if (head.random === head) {
-        newHead = new Node(head.val, next, null);
-
-        newHead.random = newHead;
-    } else {
-        if (head.random && copied[head.random.id]) {
-            random = copied[head.random.id];
+        if (head.random && copied[head.random]) {
+            random = copied[head.random];
+        } else if (head.random === head) {
+            if (headCopy) {
+                headCopy.random = headCopy;
+            } else {
+                headCopy = new Node(head.val, next, null);
+                headCopy.random = headCopy;
+            }
         } else {
             random = copyRandomList(head.random);
+            if (random) copied[random] = random;
         }
-    };
 
-    if (newHead === undefined) {
-        newHead = new Node(head.val, next, random);
+        if (headCopy === undefined) {
+            if (copied[head]) {
+                headCopy = copied[head];
+            } else {
+                headCopy = new Node(head.val, next, random);
+            }
+        } else if (headCopy && !headCopy.random) {
+            headCopy.random = random;
+        }
+
+        if (headCopy) copied[headCopy] = headCopy;
+
     }
-    copied[newHead.id] = newHead;
 
-    return newHead;
+    return headCopy;
 };
 
-n1 = new Node("-1", null, null)
-n2 = new Node("1", null, null)
+// {
+//     "$id":"1",
+//     "next":null,
+//     "random":null,
+//     "val":-1
+// }
 
-n1.next = n2;
+// n1 = new Node("1", null, null)
+// n2 = new Node("2", null, null)
+// n3 = new Node("3", null, null)
+// n4 = new Node("4", null, null)
+
+// n3.next = n4;
+// n2.next = n3;
+// n2.random = n3;
+// n1.next = n2;
+// n1.random = n3;
+
+
+n1 = new Node("-1", null, null)
 
 counter = 1;
 ids = [];
 
 console.log(copyRandomList(n1))
-// {"$id":"1",
-// "next":
-//     {"$id":"2",
-//     "next": {
-//         "$id":"3",
-//         "next": {
-//             "$id":"4",
-//             "next":null,
-//             "random":null,"val":4
-//         },
-//         "random":null,"val":3
-//     },
-//     "random": {"$ref":"3"},
-//     "val":2
-//     },
-// "random":{"$ref":"3"},
-// "val":1}
+
+
