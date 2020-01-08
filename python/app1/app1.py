@@ -5,10 +5,11 @@ import pdb
 dict = json.load(open('data.json'))
 
 def definition(w):
-    w = w.lower()
     diffs = get_close_matches(w, dict.keys())
     if w in dict:
         return '\n'.join(dict[w])
+    elif w.lower() in dict:
+        return '\n'.join(dict[w.lower()])
     elif len(diffs) > 0:
         answer = input("Did you mean '%s'? Type 'Y' or 'N'\n" % diffs[0])
         if answer == 'Y':
