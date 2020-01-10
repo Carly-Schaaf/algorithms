@@ -42,7 +42,7 @@ function stepper(nums) {
     }
     return false;
 }
-
+console.log(stepper([1, 3, 17, 5]))
 
 // Write a function, maxNonAdjacentSum(nums), that takes in an array of nonnegative numbers.
 // The function should return the maximum sum of elements in the array we can get if we cannot take
