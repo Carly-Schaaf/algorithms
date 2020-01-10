@@ -33,7 +33,10 @@ def pick_a_card(bet):
     else:
         return 0
 
-
+def roulette(arg):
+    num = random.randint(1, 36)
+    if type(arg) is str:
+        
 
 
 #Call your game of chance functions here
