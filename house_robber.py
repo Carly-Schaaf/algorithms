@@ -1,13 +1,26 @@
 # @param {Integer[]} nums
 # @return {Integer}
+# [2, 1, 1, 2] --> 4
+# at each step, calculate max: 
+#   either add value to other, non-adjacent max
+#   or keep the max of adjacent elements
+# []
+
 def rob(nums):
-    max_odd = 0
-    max_even = 0
+    if not nums:
+        return 0
+        
+    table = []
 
     for i, num in enumerate(nums):
-        if i % 2 == 0:
-            max_even += num
+        if not table:
+            table.append(num)
+        elif len(table) == 1:
+            table.append(max(num, table[0]))
         else:
-            max_odd += num 
+            table.append(max(table[i - 1], table[i - 2] + num))
 
-    return max(max_even, max_odd)
+    return table[-1]
+    
+
+print(rob([1, 2, 3, 1]))
