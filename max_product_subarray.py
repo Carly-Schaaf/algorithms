@@ -15,10 +15,9 @@ def max_product(nums):
 
             if product > max:
                 max = product
+                curr = max
             else:
-                curr = num
-                if curr > max:
-                    max = curr
+               
     
     return max
 
