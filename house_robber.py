@@ -24,3 +24,4 @@ def rob(nums):
     
 
 print(rob([1, 2, 3, 1]))
+
